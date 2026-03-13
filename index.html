@@ -27,6 +27,7 @@ main{padding:20px 16px;max-width:500px;margin:0 auto;display:flex;flex-direction
 .firma-input{width:100%;font-size:18px;font-weight:600;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;-webkit-appearance:none}
 .firma-input:focus{border-color:var(--accent);background:#fff}
 .firma-input::placeholder{font-weight:400;color:#bbb}
+.folder-preview{font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;margin-top:8px;word-break:break-all;font-family:monospace}
 .foto-btn{width:100%;padding:18px;border:2px dashed var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--accent);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none}
 .foto-btn:active{background:var(--accent-bg);border-color:var(--accent)}
 .foto-icon{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -46,8 +47,7 @@ input[type=file]{display:none}
 .info-row:last-child{border-bottom:none}
 .info-row .lbl{color:var(--muted)}
 .info-row .val{font-weight:600}
-.folder-preview{font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;margin-top:4px;word-break:break-all;font-family:monospace}
-.upload-btn{width:100%;padding:18px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none;transition:opacity .15s}
+.upload-btn{width:100%;padding:18px;background:#1a73e8;color:#fff;border:none;border-radius:var(--radius-sm);font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none;transition:opacity .15s}
 .upload-btn:active{opacity:.85}
 .upload-btn:disabled{background:var(--border);color:var(--muted)}
 .mail-btn{width:100%;padding:16px;background:var(--surface);border:1.5px solid var(--accent);border-radius:var(--radius-sm);font-size:16px;font-weight:600;color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none}
@@ -58,10 +58,10 @@ input[type=file]{display:none}
 .status-err{background:var(--danger-bg);color:var(--danger)}
 .status-warn{background:var(--warning-bg);color:var(--warning)}
 .progress-overall{background:var(--bg);border-radius:var(--radius-sm);overflow:hidden;height:8px;margin-top:-8px}
-.progress-overall-bar{height:100%;background:var(--accent);transition:width .4s;border-radius:var(--radius-sm)}
+.progress-overall-bar{height:100%;background:#1a73e8;transition:width .4s;border-radius:var(--radius-sm)}
 .link-box{background:var(--success-bg);border:1px solid var(--success);border-radius:var(--radius-sm);padding:14px 16px}
 .link-box .link-title{font-size:12px;font-weight:600;color:var(--success);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.link-box a{font-size:14px;color:var(--accent);word-break:break-all}
+.link-box a{font-size:14px;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -112,7 +112,7 @@ input[type=file]{display:none}
 
   <button class="upload-btn" id="uploadBtn" onclick="nahrat()" disabled>
     <svg style="width:22px;height:22px;fill:#fff" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
-    Nahrat na Cloudinary
+    Nahrat na Google Drive
   </button>
 
   <button class="mail-btn" id="mailBtn" onclick="otevritMail()" disabled>
@@ -121,17 +121,15 @@ input[type=file]{display:none}
   </button>
 
   <div id="linkBox" style="display:none" class="link-box">
-    <div class="link-title">Fotky nahrane — otevrit v Cloudinary</div>
-    <a id="folderLink" href="https://console.cloudinary.com/console/media_library" target="_blank">Otevrit Media Library</a>
+    <div class="link-title">Fotky nahrane na Google Drive</div>
+    <a href="https://drive.google.com" target="_blank">Otevrit Google Drive</a>
   </div>
 
   <button class="reset-btn" onclick="resetAll()">Nova zakazka</button>
 
 </main>
 <script>
-var CLOUD_NAME = 'dwnhybnyn';
-var API_KEY = '154517213655583';
-var API_SECRET = 'hR6mN58wkTCvQqFU-u2bXX3oN8c';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8Rqp9wzVH-THaKtl2vUVE1tqUPQEFODKvDwZZidizfhNqF-KJEwkAqxHioZ1bvk_h/exec';
 
 var fotos = [];
 var uploadedCount = 0;
@@ -146,7 +144,7 @@ function getFolderName(firma){
   var rok = String(d.getFullYear()).slice(2);
   var hod = pad(d.getHours());
   var min = pad(d.getMinutes());
-  var firmaClean = firma.replace(/\s+/g,'-').replace(/[^a-zA-Z0-9\-_\u00C0-\u024F]/g,'');
+  var firmaClean = firma.trim().replace(/\s+/g,'-');
   return den+'-'+mes+'-'+rok+'_'+hod+'-'+min+'_'+firmaClean;
 }
 
@@ -157,13 +155,13 @@ document.getElementById('infoDatum').textContent=formatDatum();
 document.getElementById('infoCas').textContent=formatCas();
 
 function updateInfo(){
-  var firma = document.getElementById('firma').value.trim();
-  document.getElementById('infoFirma').textContent = firma||'—';
+  var firma=document.getElementById('firma').value.trim();
+  document.getElementById('infoFirma').textContent=firma||'—';
   if(firma){
-    var folder = getFolderName(firma);
+    var folder=getFolderName(firma);
     document.getElementById('folderPreview').style.display='block';
-    document.getElementById('folderPreview').textContent = folder;
-    document.getElementById('infoSlozka').textContent = folder;
+    document.getElementById('folderPreview').textContent=folder;
+    document.getElementById('infoSlozka').textContent=folder;
   } else {
     document.getElementById('folderPreview').style.display='none';
     document.getElementById('infoSlozka').textContent='—';
@@ -211,10 +209,8 @@ function checkReady(){
   document.getElementById('mailBtn').disabled=!firma;
 }
 
-async function sha1(str){
-  var buffer=new TextEncoder().encode(str);
-  var hash=await crypto.subtle.digest('SHA-1',buffer);
-  return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+function toBase64(dataUrl){
+  return dataUrl.split(',')[1];
 }
 
 async function nahrat(){
@@ -239,25 +235,23 @@ async function nahrat(){
     renderGrid();
 
     try{
-      var timestamp=Math.round(Date.now()/1000);
-      var publicId=currentFolder+'/foto_'+pad(i+1);
-      var sigStr='folder='+currentFolder+'&public_id='+publicId+'&timestamp='+timestamp+API_SECRET;
-      var signature=await sha1(sigStr);
+      var ext=f.file.type.split('/')[1]||'jpg';
+      var fileName=currentFolder+'_foto'+pad(i+1)+'.'+ext;
+      var payload={
+        folder: currentFolder,
+        filename: fileName,
+        filedata: toBase64(f.data),
+        mimetype: f.file.type
+      };
 
-      var formData=new FormData();
-      formData.append('file',f.file);
-      formData.append('api_key',API_KEY);
-      formData.append('timestamp',timestamp);
-      formData.append('signature',signature);
-      formData.append('folder',currentFolder);
-      formData.append('public_id',publicId);
+      var resp=await fetch(SCRIPT_URL,{
+        method:'POST',
+        body: JSON.stringify(payload)
+      });
 
-      var resp=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/image/upload',{method:'POST',body:formData});
       var result=await resp.json();
-
-      if(result.secure_url){
+      if(result.status==='ok'){
         f.status='ok';
-        f.url=result.secure_url;
         uploadedCount++;
       } else {
         f.status='err';
@@ -273,12 +267,12 @@ async function nahrat(){
   }
 
   if(errors===0){
-    showStatus('Hotovo! Nahrano '+uploadedCount+' '+(uploadedCount<5?'fotky':'fotek')+'.','ok');
+    showStatus('Hotovo! Nahrano '+uploadedCount+' '+(uploadedCount===1?'fotka':uploadedCount<5?'fotky':'fotek')+' na Google Drive.','ok');
     document.getElementById('linkBox').style.display='block';
   } else if(uploadedCount>0){
     showStatus('Nahrano '+uploadedCount+' z '+total+'. '+errors+' selhalo — zkus znovu.','warn');
   } else {
-    showStatus('Chyba nahravani. Zkontroluj pripojeni.','err');
+    showStatus('Chyba nahravani. Zkontroluj pripojeni a zkus znovu.','err');
   }
   checkReady();
 }
@@ -286,8 +280,7 @@ async function nahrat(){
 function otevritMail(){
   var firma=document.getElementById('firma').value.trim();
   var predmet=encodeURIComponent(firma);
-  var urls=fotos.filter(function(f){return f.url;}).map(function(f){return f.url;}).join('\n');
-  var body=encodeURIComponent('Firma: '+firma+'\nDatum: '+formatDatum()+' '+formatCas()+'\n\nFotky:\n'+urls);
+  var body=encodeURIComponent('Firma: '+firma+'\nDatum: '+formatDatum()+' '+formatCas()+'\nSlozka: '+currentFolder);
   window.location.href='mailto:?subject='+predmet+'&body='+body;
 }
 
