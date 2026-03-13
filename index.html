@@ -4,314 +4,280 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>FotoZakazka</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Drozda Nářadí – Záruky</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#f5f4f0;--surface:#fff;--border:#e0ded6;--text:#1a1a18;--muted:#6b6a65;
-  --accent:#185FA5;--accent-bg:#E6F1FB;--success:#1a7a4a;--success-bg:#eaf6f0;
-  --danger:#a32d2d;--danger-bg:#fdf0ef;--warning:#854F0B;--warning-bg:#fef6e8;
-  --radius:14px;--radius-sm:10px;--sans:-apple-system,'Helvetica Neue',sans-serif;
-}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px}
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px 14px;position:sticky;top:0;z-index:10}
-.header-inner{display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:1.2rem;font-weight:700;letter-spacing:-0.3px}
-.logo span{color:var(--accent)}
-.badge{background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px}
-main{padding:20px 16px;max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.card-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.card-body{padding:16px}
-.firma-input{width:100%;font-size:18px;font-weight:600;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;-webkit-appearance:none}
-.firma-input:focus{border-color:var(--accent);background:#fff}
-.firma-input::placeholder{font-weight:400;color:#bbb}
-.folder-preview{font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;margin-top:8px;word-break:break-all;font-family:monospace}
-.foto-btn{width:100%;padding:18px;border:2px dashed var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--accent);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none}
-.foto-btn:active{background:var(--accent-bg);border-color:var(--accent)}
-.foto-icon{width:28px;height:28px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.foto-icon svg{width:16px;height:16px;fill:#fff}
+body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:#111;color:#fff;min-height:100vh;display:flex;flex-direction:column;max-width:390px;margin:0 auto}
+.hdr{background:#E30000;padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.hdr-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:2px;text-transform:uppercase}
+.hdr-title{font-size:18px;font-weight:700;color:#fff;line-height:1}
+.hdr-badge{background:#000;color:#fff;font-size:11px;font-weight:700;padding:5px 11px;border-radius:3px;letter-spacing:.5px}
+.body{flex:1;padding:12px;display:flex;flex-direction:column;gap:10px}
+.lbl{font-size:10px;font-weight:700;color:#aaa;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.inp-wrap{background:#d4d4d4;border-radius:4px}
+.inp-wrap input{width:100%;font-size:17px;font-weight:600;padding:11px 14px;border:none;background:transparent;color:#111;outline:none;-webkit-appearance:none;border-radius:4px}
+.inp-wrap input::placeholder{font-weight:400;color:#888}
+.folder-bar{background:#1c1c1c;border:1px solid #333;border-radius:3px;padding:6px 10px;margin-top:6px;display:none}
+.folder-bar span{font-size:11px;color:#aaa;font-family:monospace}
+.foto-btn{background:#E30000;border-radius:4px;padding:16px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
+.foto-btn:active{opacity:.85}
+.foto-icon-box{width:36px;height:36px;background:rgba(0,0,0,0.25);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.foto-btn-text{font-size:17px;font-weight:700;color:#fff;letter-spacing:.5px}
 input[type=file]{display:none}
-.foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.foto-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--bg)}
-.foto-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.foto-thumb .del-btn{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.6);border:none;border-radius:50%;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.foto-thumb .status-icon{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.foto-thumb .status-icon.ok{background:var(--success);color:#fff}
-.foto-thumb .status-icon.err{background:var(--danger);color:#fff}
-.foto-thumb .status-icon.wait{background:rgba(255,255,255,.85);color:var(--muted)}
-.foto-thumb .status-icon.uploading{background:var(--accent);color:#fff}
-.foto-count{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
-.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.foto-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.thumb{position:relative;aspect-ratio:1;border-radius:3px;overflow:hidden;background:#222;border:1px solid #333}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .si{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.thumb .si.wait{background:rgba(0,0,0,.6);color:#aaa}
+.thumb .si.uploading{background:#E30000;color:#fff}
+.thumb .si.ok{background:#1a7a2a;color:#fff}
+.thumb .si.err{background:#a32d2d;color:#fff}
+.thumb .del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(0,0,0,.7);border:none;border-radius:50%;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.info-box{background:#d4d4d4;border-radius:4px;overflow:hidden}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid #bbb}
 .info-row:last-child{border-bottom:none}
-.info-row .lbl{color:var(--muted)}
-.info-row .val{font-weight:600}
-.upload-btn{width:100%;padding:18px;background:#1a73e8;color:#fff;border:none;border-radius:var(--radius-sm);font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none;transition:opacity .15s}
-.upload-btn:active{opacity:.85}
-.upload-btn:disabled{background:var(--border);color:var(--muted)}
-.mail-btn{width:100%;padding:16px;background:var(--surface);border:1.5px solid var(--accent);border-radius:var(--radius-sm);font-size:16px;font-weight:600;color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none}
-.mail-btn:disabled{border-color:var(--border);color:var(--muted)}
-.reset-btn{width:100%;padding:14px;background:transparent;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:15px;color:var(--muted);cursor:pointer;-webkit-appearance:none}
-.status-msg{font-size:13px;text-align:center;padding:12px;border-radius:var(--radius-sm);line-height:1.5}
-.status-ok{background:var(--success-bg);color:var(--success)}
-.status-err{background:var(--danger-bg);color:var(--danger)}
-.status-warn{background:var(--warning-bg);color:var(--warning)}
-.progress-overall{background:var(--bg);border-radius:var(--radius-sm);overflow:hidden;height:8px;margin-top:-8px}
-.progress-overall-bar{height:100%;background:#1a73e8;transition:width .4s;border-radius:var(--radius-sm)}
-.link-box{background:var(--success-bg);border:1px solid var(--success);border-radius:var(--radius-sm);padding:14px 16px}
-.link-box .link-title{font-size:12px;font-weight:600;color:var(--success);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.link-box a{font-size:14px;color:var(--accent)}
+.info-lbl{font-size:12px;color:#555;font-weight:600}
+.info-val{font-size:12px;font-weight:700;color:#111}
+.prog-wrap{background:#222;border-radius:3px;overflow:hidden;height:6px;display:none}
+.prog-bar{height:100%;background:#1a7a2a;transition:width .3s;width:0%}
+.status{font-size:13px;text-align:center;padding:10px 14px;border-radius:4px;display:none;line-height:1.5}
+.status.ok{background:#0d2a0d;color:#4CAF50;border:1px solid #1a7a2a}
+.status.err{background:#2a0d0d;color:#ff6b6b;border:1px solid #a32d2d}
+.status.warn{background:#2a2200;color:#ffcc44;border:1px solid #665500}
+.countdown{font-size:12px;color:#4CAF50;text-align:center;display:none}
+.btn-green{background:#1a7a2a;border-radius:4px;padding:15px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
+.btn-green:active{opacity:.85}
+.btn-green:disabled{background:#1a1a1a;cursor:default}
+.btn-green:disabled .btn-green-text{color:#444}
+.btn-green-text{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.btn-white{background:#fff;border-radius:4px;padding:15px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
+.btn-white:active{opacity:.85}
+.btn-white:disabled{background:#1a1a1a;cursor:default}
+.btn-white:disabled .btn-white-text{color:#444}
+.btn-white-text{font-size:16px;font-weight:700;color:#111;letter-spacing:.5px;text-transform:uppercase}
+.btn-reset{padding:10px;display:flex;align-items:center;justify-content:center;width:100%;border:none;background:transparent;cursor:pointer}
+.btn-reset-text{font-size:12px;color:#444;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
 </style>
 </head>
 <body>
-<header>
-  <div class="header-inner">
-    <div class="logo">Foto<span>Zakazka</span></div>
-    <div class="badge" id="headerBadge">0 fotek</div>
+<div class="hdr">
+  <div>
+    <div class="hdr-brand">Drozda Nářadí</div>
+    <div class="hdr-title">Záruky</div>
   </div>
-</header>
-<main>
+  <div class="hdr-badge" id="badge">0 FOTEK</div>
+</div>
 
-  <div class="card">
-    <div class="card-header">Nazev firmy</div>
-    <div class="card-body">
-      <input class="firma-input" type="text" id="firma" placeholder="Zadej nazev firmy..." autocomplete="off" autocorrect="off" spellcheck="false" oninput="updateInfo()">
-      <div class="folder-preview" id="folderPreview" style="display:none"></div>
+<div class="body">
+
+  <div>
+    <div class="lbl">Název firmy</div>
+    <div class="inp-wrap">
+      <input type="text" id="firma" placeholder="Zadej název firmy..." autocomplete="off" autocorrect="off" spellcheck="false" oninput="onFirma()">
+    </div>
+    <div class="folder-bar" id="folderBar"><span id="folderText"></span></div>
+  </div>
+
+  <div>
+    <div class="lbl">Fotky</div>
+    <button class="foto-btn" onclick="spustFoto()">
+      <div class="foto-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+      <span class="foto-btn-text">Vyfotit / Vybrat</span>
+    </button>
+    <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="pridatFoto(this)">
+    <div class="foto-grid" id="grid"></div>
+  </div>
+
+  <div>
+    <div class="lbl">Přehled</div>
+    <div class="info-box">
+      <div class="info-row"><span class="info-lbl">Firma</span><span class="info-val" id="infoFirma">—</span></div>
+      <div class="info-row"><span class="info-lbl">Fotek</span><span class="info-val" id="infoCount">0</span></div>
+      <div class="info-row"><span class="info-lbl">Datum · Čas</span><span class="info-val" id="infoDatum">—</span></div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">Fotky</div>
-    <div class="card-body">
-      <button class="foto-btn" onclick="document.getElementById('fileInput').click()">
-        <div class="foto-icon"><svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg></div>
-        Vyfotit / vybrat fotky
-      </button>
-      <input type="file" id="fileInput" accept="image/*" multiple capture="environment" onchange="addFotos(this)">
-      <div class="foto-grid" id="fotoGrid"></div>
-      <div class="foto-count" id="fotoCount" style="display:none"></div>
-    </div>
-  </div>
+  <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
+  <div class="status" id="status"></div>
+  <div class="countdown" id="countdown"></div>
 
-  <div class="card">
-    <div class="card-header">Prehled</div>
-    <div class="card-body">
-      <div class="info-row"><span class="lbl">Firma</span><span class="val" id="infoFirma">—</span></div>
-      <div class="info-row"><span class="lbl">Pocet fotek</span><span class="val" id="infoCount">0</span></div>
-      <div class="info-row"><span class="lbl">Datum</span><span class="val" id="infoDatum">—</span></div>
-      <div class="info-row"><span class="lbl">Cas</span><span class="val" id="infoCas">—</span></div>
-      <div class="info-row"><span class="lbl">Slozka</span><span class="val" id="infoSlozka" style="font-size:12px;font-family:monospace;color:var(--accent)">—</span></div>
-    </div>
-  </div>
-
-  <div id="statusMsg" style="display:none" class="status-msg"></div>
-  <div class="progress-overall" id="progressWrap" style="display:none">
-    <div class="progress-overall-bar" id="progressBar" style="width:0%"></div>
-  </div>
-
-  <button class="upload-btn" id="uploadBtn" onclick="nahrat()" disabled>
-    <svg style="width:22px;height:22px;fill:#fff" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
-    Nahrat na Google Drive
+  <button class="btn-green" id="btnUpload" onclick="nahrat()" disabled>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+    <span class="btn-green-text">Nahrát na Drive</span>
   </button>
 
-  <button class="mail-btn" id="mailBtn" onclick="otevritMail()" disabled>
-    <svg style="width:20px;height:20px;fill:var(--accent)" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-    Otevrit Mail
+  <button class="btn-white" id="btnMail" onclick="otevritMail()" disabled>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="#111"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    <span class="btn-white-text">Otevřít Mail</span>
   </button>
 
-  <div id="linkBox" style="display:none" class="link-box">
-    <div class="link-title">Fotky nahrane na Google Drive</div>
-    <a href="https://drive.google.com/drive/folders/1otfYjdeEwOWZr9JjChaiBsLi3DzRLBlp" target="_blank">Otevrit slozku SERVIS Zaruky</a>
-  </div>
+  <button class="btn-reset" onclick="resetAll()">
+    <span class="btn-reset-text">Nová zakázka</span>
+  </button>
 
-  <button class="reset-btn" onclick="resetAll()">Nova zakazka</button>
+</div>
 
-</main>
 <script>
-var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXfqyyvyO45Lj1lZabnBpUUQ2Z3C6du3gsKc-UBeROKX3Ayp5aaV4M5aylbzaHQMw2GQ/exec';
-
-var fotos = [];
-var uploadedCount = 0;
-var currentFolder = '';
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxXfqyyvyO45Lj1lZabnBpUUQ2Z3C6du3gsKc-UBeROKX3Ayp5aaV4M5aylbzaHQMw2GQ/exec';
+var MAX_MB=2;
+var fotos=[];
+var currentFolder='';
+var countdownTimer=null;
 
 function pad(n){return String(n).padStart(2,'0');}
+function getFolder(firma){var d=new Date();return pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+String(d.getFullYear()).slice(2)+'_'+pad(d.getHours())+'-'+pad(d.getMinutes())+'_'+firma.trim().replace(/\s+/g,'-');}
+function getDatum(){var d=new Date();return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+String(d.getFullYear()).slice(2)+' · '+pad(d.getHours())+':'+pad(d.getMinutes());}
 
-function getFolderName(firma){
-  var d = new Date();
-  var den = pad(d.getDate());
-  var mes = pad(d.getMonth()+1);
-  var rok = String(d.getFullYear()).slice(2);
-  var hod = pad(d.getHours());
-  var min = pad(d.getMinutes());
-  var firmaClean = firma.trim().replace(/\s+/g,'-');
-  return den+'-'+mes+'-'+rok+'_'+hod+'-'+min+'_'+firmaClean;
-}
+document.getElementById('infoDatum').textContent=getDatum();
 
-function formatDatum(){var d=new Date();return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+String(d.getFullYear()).slice(2);}
-function formatCas(){var d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());}
-
-document.getElementById('infoDatum').textContent=formatDatum();
-document.getElementById('infoCas').textContent=formatCas();
-
-function updateInfo(){
-  var firma=document.getElementById('firma').value.trim();
-  document.getElementById('infoFirma').textContent=firma||'—';
-  if(firma){
-    var folder=getFolderName(firma);
-    document.getElementById('folderPreview').style.display='block';
-    document.getElementById('folderPreview').textContent=folder;
-    document.getElementById('infoSlozka').textContent=folder;
+function onFirma(){
+  var f=document.getElementById('firma').value.trim();
+  document.getElementById('infoFirma').textContent=f||'—';
+  if(f){
+    currentFolder=getFolder(f);
+    document.getElementById('folderText').textContent=currentFolder;
+    document.getElementById('folderBar').style.display='block';
   } else {
-    document.getElementById('folderPreview').style.display='none';
-    document.getElementById('infoSlozka').textContent='—';
+    document.getElementById('folderBar').style.display='none';
   }
   checkReady();
 }
 
-function addFotos(input){
-  Array.from(input.files).forEach(function(file){
-    var reader=new FileReader();
-    reader.onload=function(e){
-      fotos.push({data:e.target.result,file:file,status:'wait'});
-      renderGrid();
+function komprimuj(file,cb){
+  var maxBytes=MAX_MB*1024*1024;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var canvas=document.createElement('canvas');
+      var w=img.width,h=img.height,maxDim=2048;
+      if(w>maxDim||h>maxDim){if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}else{w=Math.round(w*maxDim/h);h=maxDim;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      var q=0.85;
+      (function tryQ(){
+        var du=canvas.toDataURL('image/jpeg',q);
+        var bytes=(du.length-'data:image/jpeg;base64,'.length)*0.75;
+        if(bytes<=maxBytes||q<=0.3){cb(du);}else{q-=0.1;tryQ();}
+      })();
     };
-    reader.readAsDataURL(file);
-  });
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function spustFoto(){document.getElementById('fileInput').click();}
+
+function pridatFoto(input){
+  var file=input.files[0];
+  if(!file) return;
   input.value='';
+  komprimuj(file,function(dataUrl){
+    fotos.push({data:dataUrl,status:'wait'});
+    renderGrid();
+    // Okamžitě otevři kameru znovu
+    setTimeout(function(){document.getElementById('fileInput').click();},350);
+  });
 }
 
 function renderGrid(){
-  var grid=document.getElementById('fotoGrid');
+  var grid=document.getElementById('grid');
   grid.innerHTML=fotos.map(function(f,i){
-    var icon='';
-    if(f.status==='ok') icon='<div class="status-icon ok">&#10003;</div>';
-    else if(f.status==='err') icon='<div class="status-icon err">!</div>';
-    else if(f.status==='uploading') icon='<div class="status-icon uploading">...</div>';
-    else icon='<div class="status-icon wait">'+String(i+1)+'</div>';
-    var del=f.status==='wait'||f.status==='err'?'<button class="del-btn" onclick="deleteFoto('+i+')">x</button>':'';
-    return '<div class="foto-thumb">'+icon+'<img src="'+f.data+'" loading="lazy">'+del+'</div>';
+    var si='';
+    if(f.status==='ok') si='<div class="si ok">✓</div>';
+    else if(f.status==='err') si='<div class="si err">!</div>';
+    else if(f.status==='uploading') si='<div class="si uploading">↑</div>';
+    else si='<div class="si wait">'+(i+1)+'</div>';
+    var del=(f.status==='wait'||f.status==='err')?'<button class="del" onclick="smazFoto('+i+')">×</button>':'';
+    return '<div class="thumb">'+si+'<img src="'+f.data+'" loading="lazy">'+del+'</div>';
   }).join('');
-  var count=fotos.length;
-  document.getElementById('fotoCount').style.display=count?'block':'none';
-  document.getElementById('fotoCount').textContent=count+' '+(count===1?'fotka':count<5?'fotky':'fotek');
-  document.getElementById('infoCount').textContent=count;
-  document.getElementById('headerBadge').textContent=count+' '+(count===1?'fotka':count<5?'fotky':'fotek');
+  var n=fotos.length;
+  document.getElementById('badge').textContent=n+' '+(n===1?'FOTKA':n<5?'FOTKY':'FOTEK');
+  document.getElementById('infoCount').textContent=n;
   checkReady();
 }
 
-function deleteFoto(i){fotos.splice(i,1);renderGrid();}
+function smazFoto(i){fotos.splice(i,1);renderGrid();}
 
 function checkReady(){
   var firma=document.getElementById('firma').value.trim();
   var pending=fotos.filter(function(f){return f.status==='wait'||f.status==='err';});
-  document.getElementById('uploadBtn').disabled=!(firma&&pending.length>0);
-  document.getElementById('mailBtn').disabled=!firma;
+  document.getElementById('btnUpload').disabled=!(firma&&pending.length>0);
+  document.getElementById('btnMail').disabled=!firma;
 }
 
-function toBase64(dataUrl){return dataUrl.split(',')[1];}
+function toBase64(du){return du.split(',')[1];}
 
 async function nahrat(){
   var firma=document.getElementById('firma').value.trim();
-  currentFolder=getFolderName(firma);
+  currentFolder=getFolder(firma);
   var pending=fotos.filter(function(f){return f.status==='wait'||f.status==='err';});
-  if(!pending.length)return;
-
-  document.getElementById('uploadBtn').disabled=true;
-  document.getElementById('progressWrap').style.display='block';
-  document.getElementById('progressBar').style.width='0%';
-  showStatus('Nahrivam '+pending.length+' '+(pending.length<5?'fotky':'fotek')+'...','warn');
-
-  uploadedCount=0;
-  var total=pending.length;
-  var errors=0;
-
+  if(!pending.length) return;
+  document.getElementById('btnUpload').disabled=true;
+  document.getElementById('progWrap').style.display='block';
+  document.getElementById('progBar').style.width='0%';
+  showStatus('Nahrávám '+pending.length+' '+(pending.length<5?'fotky':'fotek')+'...','warn');
+  var total=pending.length,done=0,errors=0;
   for(var i=0;i<fotos.length;i++){
     var f=fotos[i];
     if(f.status!=='wait'&&f.status!=='err') continue;
-    f.status='uploading';
-    renderGrid();
-
+    f.status='uploading';renderGrid();
     try{
-      var ext=f.file.type.split('/')[1]||'jpg';
-      var fileName=currentFolder+'_foto'+pad(i+1)+'.'+ext;
-      var payload={
-        folder: currentFolder,
-        filename: fileName,
-        filedata: toBase64(f.data),
-        mimetype: f.file.type
-      };
-
-      var resp=await fetch(SCRIPT_URL,{
-        method:'POST',
-        body:JSON.stringify(payload)
-      });
-
-      var result=await resp.json();
-      if(result.status==='ok'){
-        f.status='ok';
-        uploadedCount++;
-      } else {
-        f.status='err';
-        errors++;
-      }
-    } catch(e){
-      f.status='err';
-      errors++;
-    }
-
-    document.getElementById('progressBar').style.width=Math.round(((uploadedCount+errors)/total)*100)+'%';
+      var resp=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({folder:currentFolder,filename:currentFolder+'_foto'+pad(i+1)+'.jpg',filedata:toBase64(f.data),mimetype:'image/jpeg'})});
+      var r=await resp.json();
+      if(r.status==='ok'){f.status='ok';done++;}else{f.status='err';errors++;}
+    }catch(e){f.status='err';errors++;}
+    document.getElementById('progBar').style.width=Math.round(((done+errors)/total)*100)+'%';
     renderGrid();
   }
-
   if(errors===0){
-    showStatus('Hotovo! Nahrano '+uploadedCount+' '+(uploadedCount===1?'fotka':uploadedCount<5?'fotky':'fotek')+' na Google Drive.','ok');
-    document.getElementById('linkBox').style.display='block';
-  } else if(uploadedCount>0){
-    showStatus('Nahrano '+uploadedCount+' z '+total+'. '+errors+' selhalo — zkus znovu.','warn');
+    showStatus('✓ Hotovo! Nahráno '+done+' '+(done===1?'fotka':done<5?'fotky':'fotek')+' na Google Drive.','ok');
+    var sec=3;
+    var cd=document.getElementById('countdown');
+    cd.style.display='block';
+    cd.textContent='Nová zakázka za '+sec+'...';
+    countdownTimer=setInterval(function(){
+      sec--;
+      if(sec<=0){clearInterval(countdownTimer);resetAll();}
+      else{cd.textContent='Nová zakázka za '+sec+'...';}
+    },1000);
+  } else if(done>0){
+    showStatus('Nahráno '+done+' z '+total+'. '+errors+' selhalo — zkus znovu.','warn');
   } else {
-    showStatus('Chyba nahravani. Zkontroluj pripojeni a zkus znovu.','err');
+    showStatus('Chyba nahrávání. Zkontroluj připojení.','err');
   }
   checkReady();
 }
 
-function otevritMail(){
-  var firma=document.getElementById('firma').value.trim();
-  var predmet=encodeURIComponent(firma);
-  var body=encodeURIComponent('Firma: '+firma+'\nDatum: '+formatDatum()+' '+formatCas()+'\nSlozka: '+currentFolder);
-  window.location.href='mailto:?subject='+predmet+'&body='+body;
+function showStatus(msg,type){
+  var el=document.getElementById('status');
+  el.textContent=msg;el.className='status '+type;el.style.display='block';
 }
 
-function showStatus(msg,type){
-  var el=document.getElementById('statusMsg');
-  el.textContent=msg;
-  el.className='status-msg status-'+(type||'ok');
-  el.style.display='block';
+function otevritMail(){
+  var firma=document.getElementById('firma').value.trim();
+  window.location.href='mailto:?subject='+encodeURIComponent(firma)+'&body='+encodeURIComponent('Firma: '+firma+'\nDatum: '+getDatum()+'\nSlozka: '+currentFolder);
 }
 
 function resetAll(){
-  if(fotos.length>0||document.getElementById('firma').value){
-    if(!confirm('Smazat vse a zacit novou zakazku?'))return;
-  }
-  fotos=[];
-  uploadedCount=0;
-  currentFolder='';
+  if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
+  fotos=[];currentFolder='';
   document.getElementById('firma').value='';
-  document.getElementById('fotoGrid').innerHTML='';
-  document.getElementById('fotoCount').style.display='none';
-  document.getElementById('folderPreview').style.display='none';
-  document.getElementById('headerBadge').textContent='0 fotek';
+  document.getElementById('grid').innerHTML='';
+  document.getElementById('badge').textContent='0 FOTEK';
   document.getElementById('infoFirma').textContent='—';
   document.getElementById('infoCount').textContent='0';
-  document.getElementById('infoDatum').textContent=formatDatum();
-  document.getElementById('infoCas').textContent=formatCas();
-  document.getElementById('infoSlozka').textContent='—';
-  document.getElementById('uploadBtn').disabled=true;
-  document.getElementById('mailBtn').disabled=true;
-  document.getElementById('statusMsg').style.display='none';
-  document.getElementById('progressWrap').style.display='none';
-  document.getElementById('progressBar').style.width='0%';
-  document.getElementById('linkBox').style.display='none';
+  document.getElementById('infoDatum').textContent=getDatum();
+  document.getElementById('folderBar').style.display='none';
+  document.getElementById('btnUpload').disabled=true;
+  document.getElementById('btnMail').disabled=true;
+  document.getElementById('status').style.display='none';
+  document.getElementById('progWrap').style.display='none';
+  document.getElementById('progBar').style.width='0%';
+  document.getElementById('countdown').style.display='none';
 }
 </script>
 </body>
