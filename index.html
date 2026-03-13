@@ -20,20 +20,32 @@ body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:#111;color
 .inp-wrap input::placeholder{font-weight:400;color:#888}
 .folder-bar{background:#1c1c1c;border:1px solid #333;border-radius:3px;padding:6px 10px;margin-top:6px;display:none}
 .folder-bar span{font-size:11px;color:#aaa;font-family:monospace}
+
+/* FOTO SEKCE */
+.foto-sekce{display:flex;flex-direction:column;gap:8px}
 .foto-btn{background:#E30000;border-radius:4px;padding:16px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
 .foto-btn:active{opacity:.85}
 .foto-icon-box{width:36px;height:36px;background:rgba(0,0,0,0.25);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .foto-btn-text{font-size:17px;font-weight:700;color:#fff;letter-spacing:.5px}
+
+/* FOTÍM DALŠÍ — velké červené tlačítko, skryté dokud nejsou fotky */
+.btn-dalsi{background:#E30000;border-radius:4px;padding:18px;display:none;align-items:center;justify-content:center;gap:12px;width:100%;border:none;cursor:pointer;-webkit-appearance:none;border:2px solid #ff4444}
+.btn-dalsi:active{opacity:.85}
+.btn-dalsi-text{font-size:19px;font-weight:700;color:#fff;letter-spacing:.5px}
+
 input[type=file]{display:none}
-.foto-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
-.thumb{position:relative;aspect-ratio:1;border-radius:3px;overflow:hidden;background:#222;border:1px solid #333}
+
+/* GRID — 3 sloupce, větší náhledy */
+.foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.thumb{position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;background:#222;border:1px solid #333}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb .si{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
-.thumb .si.wait{background:rgba(0,0,0,.6);color:#aaa}
+.thumb .si{position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.thumb .si.wait{background:rgba(0,0,0,.65);color:#ccc}
 .thumb .si.uploading{background:#E30000;color:#fff}
 .thumb .si.ok{background:#1a7a2a;color:#fff}
 .thumb .si.err{background:#a32d2d;color:#fff}
-.thumb .del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(0,0,0,.7);border:none;border-radius:50%;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.thumb .del{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.75);border:none;border-radius:50%;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+
 .info-box{background:#d4d4d4;border-radius:4px;overflow:hidden}
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid #bbb}
 .info-row:last-child{border-bottom:none}
@@ -50,6 +62,7 @@ input[type=file]{display:none}
 .btn-green:active{opacity:.85}
 .btn-green:disabled{background:#1a1a1a;cursor:default}
 .btn-green:disabled .btn-green-text{color:#444}
+.btn-green:disabled svg{opacity:.3}
 .btn-green-text{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase}
 .btn-white{background:#fff;border-radius:4px;padding:15px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
 .btn-white:active{opacity:.85}
@@ -79,14 +92,25 @@ input[type=file]{display:none}
     <div class="folder-bar" id="folderBar"><span id="folderText"></span></div>
   </div>
 
-  <div>
+  <div class="foto-sekce">
     <div class="lbl">Fotky</div>
-    <button class="foto-btn" onclick="spustFoto()">
+
+    <!-- První tlačítko — vždy viditelné -->
+    <button class="foto-btn" id="btnPrvni" onclick="spustFoto()">
       <div class="foto-icon-box">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
       </div>
       <span class="foto-btn-text">Vyfotit / Vybrat</span>
     </button>
+
+    <!-- FOTÍM DALŠÍ — zobrazí se po první fotce -->
+    <button class="btn-dalsi" id="btnDalsi" onclick="spustFoto()">
+      <div class="foto-icon-box" style="background:rgba(0,0,0,0.3)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+      <span class="btn-dalsi-text">+ FOTÍM DALŠÍ</span>
+    </button>
+
     <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="pridatFoto(this)">
     <div class="foto-grid" id="grid"></div>
   </div>
@@ -178,8 +202,6 @@ function pridatFoto(input){
   komprimuj(file,function(dataUrl){
     fotos.push({data:dataUrl,status:'wait'});
     renderGrid();
-    // Okamžitě otevři kameru znovu
-    setTimeout(function(){document.getElementById('fileInput').click();},350);
   });
 }
 
@@ -197,6 +219,15 @@ function renderGrid(){
   var n=fotos.length;
   document.getElementById('badge').textContent=n+' '+(n===1?'FOTKA':n<5?'FOTKY':'FOTEK');
   document.getElementById('infoCount').textContent=n;
+
+  // Zobraz FOTÍM DALŠÍ po první fotce, skryj původní tlačítko
+  if(n>0){
+    document.getElementById('btnPrvni').style.display='none';
+    document.getElementById('btnDalsi').style.display='flex';
+  } else {
+    document.getElementById('btnPrvni').style.display='flex';
+    document.getElementById('btnDalsi').style.display='none';
+  }
   checkReady();
 }
 
@@ -278,6 +309,8 @@ function resetAll(){
   document.getElementById('progWrap').style.display='none';
   document.getElementById('progBar').style.width='0%';
   document.getElementById('countdown').style.display='none';
+  document.getElementById('btnPrvni').style.display='flex';
+  document.getElementById('btnDalsi').style.display='none';
 }
 </script>
 </body>
