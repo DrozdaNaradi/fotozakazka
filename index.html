@@ -9,48 +9,48 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,'Helvetica Neue',sans-serif;background:#111;color:#fff;min-height:100vh;display:flex;flex-direction:column;max-width:390px;margin:0 auto}
-.hdr{background:#E30000;padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.hdr-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:2px;text-transform:uppercase}
-.hdr-title{font-size:18px;font-weight:700;color:#fff;line-height:1}
-.hdr-badge{background:#000;color:#fff;font-size:11px;font-weight:700;padding:5px 11px;border-radius:3px;letter-spacing:.5px}
+
+.hdr{background:#E30000;padding:20px 18px 18px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.hdr-brand{font-size:12px;font-weight:700;color:rgba(255,255,255,0.75);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:3px}
+.hdr-title{font-size:26px;font-weight:700;color:#fff;line-height:1;letter-spacing:-0.5px}
+.hdr-badge{background:#000;color:#fff;font-size:12px;font-weight:700;padding:7px 13px;border-radius:4px;letter-spacing:.5px;white-space:nowrap}
+
 .body{flex:1;padding:12px;display:flex;flex-direction:column;gap:10px}
 .lbl{font-size:10px;font-weight:700;color:#aaa;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+
 .inp-wrap{background:#d4d4d4;border-radius:4px}
-.inp-wrap input{width:100%;font-size:17px;font-weight:600;padding:11px 14px;border:none;background:transparent;color:#111;outline:none;-webkit-appearance:none;border-radius:4px}
+.inp-wrap input{width:100%;font-size:17px;font-weight:600;padding:12px 14px;border:none;background:transparent;color:#111;outline:none;-webkit-appearance:none;border-radius:4px}
 .inp-wrap input::placeholder{font-weight:400;color:#888}
 .folder-bar{background:#1c1c1c;border:1px solid #333;border-radius:3px;padding:6px 10px;margin-top:6px;display:none}
 .folder-bar span{font-size:11px;color:#aaa;font-family:monospace}
 
-/* FOTO SEKCE */
-.foto-sekce{display:flex;flex-direction:column;gap:8px}
-.foto-btn{background:#E30000;border-radius:4px;padding:16px;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
-.foto-btn:active{opacity:.85}
-.foto-icon-box{width:36px;height:36px;background:rgba(0,0,0,0.25);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.foto-btn-text{font-size:17px;font-weight:700;color:#fff;letter-spacing:.5px}
+/* FOTO TLAČÍTKA */
+.btn-fotit{background:#E30000;border-radius:4px;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
+.btn-fotit:active{opacity:.85}
+.btn-fotit-text{font-size:17px;font-weight:700;color:#fff;letter-spacing:.5px}
 
-/* FOTÍM DALŠÍ — velké červené tlačítko, skryté dokud nejsou fotky */
-.btn-dalsi{background:#E30000;border-radius:4px;padding:18px;display:none;align-items:center;justify-content:center;gap:12px;width:100%;border:none;cursor:pointer;-webkit-appearance:none;border:2px solid #ff4444}
+.btn-dalsi{background:#E30000;border-radius:4px;padding:18px;display:none;align-items:center;justify-content:center;gap:12px;width:100%;border:2px solid #ff5555;cursor:pointer;-webkit-appearance:none}
 .btn-dalsi:active{opacity:.85}
 .btn-dalsi-text{font-size:19px;font-weight:700;color:#fff;letter-spacing:.5px}
 
 input[type=file]{display:none}
 
-/* GRID — 3 sloupce, větší náhledy */
-.foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.thumb{position:relative;aspect-ratio:1;border-radius:4px;overflow:hidden;background:#222;border:1px solid #333}
+.foto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.thumb{position:relative;aspect-ratio:1;border-radius:5px;overflow:hidden;background:#222;border:1px solid #333}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.thumb .si{position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.thumb .si{position:absolute;top:5px;left:5px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 .thumb .si.wait{background:rgba(0,0,0,.65);color:#ccc}
 .thumb .si.uploading{background:#E30000;color:#fff}
 .thumb .si.ok{background:#1a7a2a;color:#fff}
 .thumb .si.err{background:#a32d2d;color:#fff}
-.thumb .del{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.75);border:none;border-radius:50%;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.thumb .del{position:absolute;top:5px;right:5px;width:24px;height:24px;background:rgba(0,0,0,.75);border:none;border-radius:50%;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
 
 .info-box{background:#d4d4d4;border-radius:4px;overflow:hidden}
 .info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid #bbb}
 .info-row:last-child{border-bottom:none}
 .info-lbl{font-size:12px;color:#555;font-weight:600}
 .info-val{font-size:12px;font-weight:700;color:#111}
+
 .prog-wrap{background:#222;border-radius:3px;overflow:hidden;height:6px;display:none}
 .prog-bar{height:100%;background:#1a7a2a;transition:width .3s;width:0%}
 .status{font-size:13px;text-align:center;padding:10px 14px;border-radius:4px;display:none;line-height:1.5}
@@ -58,22 +58,26 @@ input[type=file]{display:none}
 .status.err{background:#2a0d0d;color:#ff6b6b;border:1px solid #a32d2d}
 .status.warn{background:#2a2200;color:#ffcc44;border:1px solid #665500}
 .countdown{font-size:12px;color:#4CAF50;text-align:center;display:none}
-.btn-green{background:#1a7a2a;border-radius:4px;padding:15px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
+
+/* VŠECHNA AKČNÍ TLAČÍTKA — stejná výška, zelená/bílá */
+.btn-green{background:#1a7a2a;border-radius:4px;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
 .btn-green:active{opacity:.85}
-.btn-green:disabled{background:#1a1a1a;cursor:default}
-.btn-green:disabled .btn-green-text{color:#444}
-.btn-green:disabled svg{opacity:.3}
+.btn-green:disabled{background:#1a7a2a;cursor:default;opacity:0.4}
+.btn-green:disabled .btn-green-text{color:#fff}
+.btn-green:disabled svg{opacity:.2}
 .btn-green-text{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase}
-.btn-white{background:#fff;border-radius:4px;padding:15px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
+
+.btn-white{background:#fff;border-radius:4px;padding:16px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:none;cursor:pointer;-webkit-appearance:none}
 .btn-white:active{opacity:.85}
-.btn-white:disabled{background:#1a1a1a;cursor:default}
-.btn-white:disabled .btn-white-text{color:#444}
+.btn-white:disabled{background:#fff;cursor:default}
+.btn-white:disabled .btn-white-text{color:#111}
+.btn-white:disabled svg{opacity:1}
+.btn-white:disabled svg{opacity:.2}
 .btn-white-text{font-size:16px;font-weight:700;color:#111;letter-spacing:.5px;text-transform:uppercase}
-.btn-reset{padding:10px;display:flex;align-items:center;justify-content:center;width:100%;border:none;background:transparent;cursor:pointer}
-.btn-reset-text{font-size:12px;color:#444;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
 </style>
 </head>
 <body>
+
 <div class="hdr">
   <div>
     <div class="hdr-brand">Drozda Nářadí</div>
@@ -92,26 +96,20 @@ input[type=file]{display:none}
     <div class="folder-bar" id="folderBar"><span id="folderText"></span></div>
   </div>
 
-  <div class="foto-sekce">
+  <div>
     <div class="lbl">Fotky</div>
-
-    <!-- První tlačítko — vždy viditelné -->
-    <button class="foto-btn" id="btnPrvni" onclick="spustFoto()">
-      <div class="foto-icon-box">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
-      </div>
-      <span class="foto-btn-text">Vyfotit / Vybrat</span>
+    <button class="btn-fotit" id="btnPrvni" onclick="spustKameru()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
+      <span class="btn-fotit-text">Vyfotit / Vybrat</span>
     </button>
-
-    <!-- FOTÍM DALŠÍ — zobrazí se po první fotce -->
-    <button class="btn-dalsi" id="btnDalsi" onclick="spustFoto()">
-      <div class="foto-icon-box" style="background:rgba(0,0,0,0.3)">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
-      </div>
+    <button class="btn-dalsi" id="btnDalsi" onclick="spustKameru()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 018.5 12 3.5 3.5 0 0112 8.5a3.5 3.5 0 013.5 3.5 3.5 3.5 0 01-3.5 3.5m7-10h-1.8L15.5 4h-7L6.8 5.5H5C3.9 5.5 3 6.4 3 7.5v11C3 19.6 3.9 20.5 5 20.5h14c1.1 0 2-.9 2-2v-11c0-1.1-.9-2-2-2z"/></svg>
       <span class="btn-dalsi-text">+ FOTÍM DALŠÍ</span>
     </button>
 
-    <input type="file" id="fileInput" accept="image/*" capture="environment" onchange="pridatFoto(this)">
+    <input type="file" id="inputKamera" accept="image/*" capture="environment" onchange="pridatFoto(this)">
+    <input type="file" id="inputKnihovna" accept="image/*" multiple onchange="pridatVice(this)">
+
     <div class="foto-grid" id="grid"></div>
   </div>
 
@@ -128,18 +126,28 @@ input[type=file]{display:none}
   <div class="status" id="status"></div>
   <div class="countdown" id="countdown"></div>
 
+  <!-- 1. Nahrát na Drive — zelené -->
   <button class="btn-green" id="btnUpload" onclick="nahrat()" disabled>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
     <span class="btn-green-text">Nahrát na Drive</span>
   </button>
 
+  <!-- 2. Knihovna — bílé -->
+  <button class="btn-white" onclick="spustKnihovnu()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#111"><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>
+    <span class="btn-white-text">Knihovna fotek</span>
+  </button>
+
+  <!-- 3. Otevřít Mail — bílé -->
   <button class="btn-white" id="btnMail" onclick="otevritMail()" disabled>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="#111"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#111"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
     <span class="btn-white-text">Otevřít Mail</span>
   </button>
 
-  <button class="btn-reset" onclick="resetAll()">
-    <span class="btn-reset-text">Nová zakázka</span>
+  <!-- 4. Resetovat — bílé -->
+  <button class="btn-white" onclick="resetAll()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="#111"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+    <span class="btn-white-text">Resetovat</span>
   </button>
 
 </div>
@@ -193,7 +201,8 @@ function komprimuj(file,cb){
   reader.readAsDataURL(file);
 }
 
-function spustFoto(){document.getElementById('fileInput').click();}
+function spustKameru(){document.getElementById('inputKamera').click();}
+function spustKnihovnu(){document.getElementById('inputKnihovna').click();}
 
 function pridatFoto(input){
   var file=input.files[0];
@@ -203,6 +212,22 @@ function pridatFoto(input){
     fotos.push({data:dataUrl,status:'wait'});
     renderGrid();
   });
+}
+
+function pridatVice(input){
+  var files=Array.from(input.files);
+  if(!files.length) return;
+  input.value='';
+  var i=0;
+  function next(){
+    if(i>=files.length) return;
+    komprimuj(files[i],function(dataUrl){
+      fotos.push({data:dataUrl,status:'wait'});
+      renderGrid();
+      i++;next();
+    });
+  }
+  next();
 }
 
 function renderGrid(){
@@ -219,8 +244,6 @@ function renderGrid(){
   var n=fotos.length;
   document.getElementById('badge').textContent=n+' '+(n===1?'FOTKA':n<5?'FOTKY':'FOTEK');
   document.getElementById('infoCount').textContent=n;
-
-  // Zobraz FOTÍM DALŠÍ po první fotce, skryj původní tlačítko
   if(n>0){
     document.getElementById('btnPrvni').style.display='none';
     document.getElementById('btnDalsi').style.display='flex';
@@ -269,11 +292,11 @@ async function nahrat(){
     var sec=3;
     var cd=document.getElementById('countdown');
     cd.style.display='block';
-    cd.textContent='Nová zakázka za '+sec+'...';
+    cd.textContent='Resetování za '+sec+'...';
     countdownTimer=setInterval(function(){
       sec--;
       if(sec<=0){clearInterval(countdownTimer);resetAll();}
-      else{cd.textContent='Nová zakázka za '+sec+'...';}
+      else{cd.textContent='Resetování za '+sec+'...';}
     },1000);
   } else if(done>0){
     showStatus('Nahráno '+done+' z '+total+'. '+errors+' selhalo — zkus znovu.','warn');
