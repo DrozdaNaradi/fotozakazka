@@ -122,14 +122,14 @@ input[type=file]{display:none}
 
   <div id="linkBox" style="display:none" class="link-box">
     <div class="link-title">Fotky nahrane na Google Drive</div>
-    <a href="https://drive.google.com" target="_blank">Otevrit Google Drive</a>
+    <a href="https://drive.google.com/drive/folders/1otfYjdeEwOWZr9JjChaiBsLi3DzRLBlp" target="_blank">Otevrit slozku SERVIS Zaruky</a>
   </div>
 
   <button class="reset-btn" onclick="resetAll()">Nova zakazka</button>
 
 </main>
 <script>
-var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8Rqp9wzVH-THaKtl2vUVE1tqUPQEFODKvDwZZidizfhNqF-KJEwkAqxHioZ1bvk_h/exec';
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXfqyyvyO45Lj1lZabnBpUUQ2Z3C6du3gsKc-UBeROKX3Ayp5aaV4M5aylbzaHQMw2GQ/exec';
 
 var fotos = [];
 var uploadedCount = 0;
@@ -209,9 +209,7 @@ function checkReady(){
   document.getElementById('mailBtn').disabled=!firma;
 }
 
-function toBase64(dataUrl){
-  return dataUrl.split(',')[1];
-}
+function toBase64(dataUrl){return dataUrl.split(',')[1];}
 
 async function nahrat(){
   var firma=document.getElementById('firma').value.trim();
@@ -246,7 +244,7 @@ async function nahrat(){
 
       var resp=await fetch(SCRIPT_URL,{
         method:'POST',
-        body: JSON.stringify(payload)
+        body:JSON.stringify(payload)
       });
 
       var result=await resp.json();
