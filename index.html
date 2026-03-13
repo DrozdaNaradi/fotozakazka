@@ -215,9 +215,12 @@ async function sdílet() {
       return new File([blob], fileName, { type: blob.type });
     }));
 
+    const predmet = `Zakázka: ${firma} — ${datum}`;
+    const zprava = `Zakázka: ${firma}\nDatum: ${datum} ${cas}\nPočet fotek: ${fotos.length}`;
+
     const shareData = {
-      title: `${firma} — ${datum}`,
-      text: `Zakázka: ${firma}\nDatum: ${datum} ${cas}\nPočet fotek: ${fotos.length}`,
+      title: predmet,
+      text: zprava,
       files: shareFiles
     };
 
@@ -225,7 +228,7 @@ async function sdílet() {
       await navigator.share(shareData);
       showStatus('Odesláno!', true);
     } else {
-      await navigator.share({ title: shareData.title, text: shareData.text });
+      await navigator.share({ title: predmet, text: zprava });
       showStatus('Sdílení bez fotek — zkus Safari na iPhonu pro sdílení fotek.', false);
     }
   } catch (e) {
