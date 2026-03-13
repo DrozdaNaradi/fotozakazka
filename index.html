@@ -154,7 +154,6 @@ input[type=file]{display:none}
 
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxXfqyyvyO45Lj1lZabnBpUUQ2Z3C6du3gsKc-UBeROKX3Ayp5aaV4M5aylbzaHQMw2GQ/exec';
-var ANTHROPIC_KEY='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';
 var MAX_MB=2;
 var fotos=[];
 var currentFolder='';
@@ -266,27 +265,6 @@ function checkReady(){
 
 function toBase64(du){return du.split(',')[1];}
 
-async function precistSN(dataUrl){
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_KEY,'anthropic-version':'2023-06-01'},
-      body:JSON.stringify({
-        model:'claude-haiku-4-5-20251001',
-        max_tokens:100,
-        messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:dataUrl.split(',')[1]}},
-          {type:'text',text:'Na fotce hledej seriove cislo ve formatu S/N: XXXXXXXXX (dlouhe cislo vedle QR kodu na bilem stitku na cervenem pozadi). Pokud ho vidis, odpovez POUZE timto cislem bez jakehokoli dalsiho textu. Pokud tam zadne S/N cislo neni, odpovez pouze slovem NIC.'}
-        ]}]
-      })
-    });
-    var data=await resp.json();
-    var text=data.content&&data.content[0]&&data.content[0].text?data.content[0].text.trim():'NIC';
-    if(text==='NIC'||text.length<5) return null;
-    return text;
-  }catch(e){return null;}
-}
-
 async function nahrat(){
   var firma=document.getElementById('firma').value.trim();
   currentFolder=getFolder(firma);
@@ -297,15 +275,10 @@ async function nahrat(){
   document.getElementById('progBar').style.width='0%';
   showStatus('Nahrávám '+pending.length+' '+(pending.length<5?'fotky':'fotek')+'...','warn');
   var total=pending.length,done=0,errors=0;
-  var snCisla=[];
-  var snPromises=[];
-
   for(var i=0;i<fotos.length;i++){
     var f=fotos[i];
     if(f.status!=='wait'&&f.status!=='err') continue;
     f.status='uploading';renderGrid();
-    // Spust SN cteni paralelne s nahranim
-    snPromises.push((function(dataUrl,idx){return precistSN(dataUrl).then(function(sn){if(sn) snCisla.push('foto'+(idx+1)+': '+sn);});})(f.data,i));
     try{
       var resp=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({folder:currentFolder,filename:currentFolder+'_foto'+pad(i+1)+'.jpg',filedata:toBase64(f.data),mimetype:'image/jpeg'})});
       var r=await resp.json();
@@ -314,25 +287,8 @@ async function nahrat(){
     document.getElementById('progBar').style.width=Math.round(((done+errors)/total)*100)+'%';
     renderGrid();
   }
-
-  // Pockej na vsechny SN analyzy
-  await Promise.all(snPromises);
-
-  // Pokud jsou nejaka SN cisla, nahraj txt soubor
-  if(snCisla.length>0){
-    var datum=getDatum();
-    var txtObsah=firma+' — '+datum+'
-
-'+snCisla.join('
-');
-    try{
-      await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({folder:currentFolder,filename:currentFolder+'_seriova_cisla.txt',filedata:btoa(unescape(encodeURIComponent(txtObsah))),mimetype:'text/plain'})});
-    }catch(e){}
-  }
-
   if(errors===0){
-    var snInfo=snCisla.length>0?' (nalezeno '+snCisla.length+' S/N čísel)':'';
-    showStatus('✓ Hotovo! Nahráno '+done+' '+(done===1?'fotka':done<5?'fotky':'fotek')+' na Google Drive.'+snInfo,'ok');
+    showStatus('✓ Hotovo! Nahráno '+done+' '+(done===1?'fotka':done<5?'fotky':'fotek')+' na Google Drive.','ok');
     var sec=3;
     var cd=document.getElementById('countdown');
     cd.style.display='block';
