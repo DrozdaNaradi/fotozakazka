@@ -36,17 +36,17 @@ input[type=file]{display:none}
 .foto-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--bg)}
 .foto-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .foto-thumb .del-btn{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,.6);border:none;border-radius:50%;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.foto-thumb .progress{position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(0,0,0,.2)}
-.foto-thumb .progress-bar{height:100%;background:var(--success);transition:width .3s}
 .foto-thumb .status-icon{position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 .foto-thumb .status-icon.ok{background:var(--success);color:#fff}
 .foto-thumb .status-icon.err{background:var(--danger);color:#fff}
-.foto-thumb .status-icon.wait{background:rgba(255,255,255,.8);color:var(--muted)}
+.foto-thumb .status-icon.wait{background:rgba(255,255,255,.85);color:var(--muted)}
+.foto-thumb .status-icon.uploading{background:var(--accent);color:#fff}
 .foto-count{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
 .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
 .info-row:last-child{border-bottom:none}
 .info-row .lbl{color:var(--muted)}
 .info-row .val{font-weight:600}
+.folder-preview{font-size:12px;color:var(--accent);background:var(--accent-bg);padding:8px 12px;border-radius:8px;margin-top:4px;word-break:break-all;font-family:monospace}
 .upload-btn{width:100%;padding:18px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-appearance:none;transition:opacity .15s}
 .upload-btn:active{opacity:.85}
 .upload-btn:disabled{background:var(--border);color:var(--muted)}
@@ -77,6 +77,7 @@ input[type=file]{display:none}
     <div class="card-header">Nazev firmy</div>
     <div class="card-body">
       <input class="firma-input" type="text" id="firma" placeholder="Zadej nazev firmy..." autocomplete="off" autocorrect="off" spellcheck="false" oninput="updateInfo()">
+      <div class="folder-preview" id="folderPreview" style="display:none"></div>
     </div>
   </div>
 
@@ -100,6 +101,7 @@ input[type=file]{display:none}
       <div class="info-row"><span class="lbl">Pocet fotek</span><span class="val" id="infoCount">0</span></div>
       <div class="info-row"><span class="lbl">Datum</span><span class="val" id="infoDatum">—</span></div>
       <div class="info-row"><span class="lbl">Cas</span><span class="val" id="infoCas">—</span></div>
+      <div class="info-row"><span class="lbl">Slozka</span><span class="val" id="infoSlozka" style="font-size:12px;font-family:monospace;color:var(--accent)">—</span></div>
     </div>
   </div>
 
@@ -109,7 +111,7 @@ input[type=file]{display:none}
   </div>
 
   <button class="upload-btn" id="uploadBtn" onclick="nahrat()" disabled>
-    <svg style="width:22px;height:22px;fill:#fff" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    <svg style="width:22px;height:22px;fill:#fff" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
     Nahrat na Cloudinary
   </button>
 
@@ -119,8 +121,8 @@ input[type=file]{display:none}
   </button>
 
   <div id="linkBox" style="display:none" class="link-box">
-    <div class="link-title">Fotky nahrane — odkaz na slozku</div>
-    <a id="folderLink" href="#" target="_blank">Otevrit slozku v Cloudinary</a>
+    <div class="link-title">Fotky nahrane — otevrit v Cloudinary</div>
+    <a id="folderLink" href="https://console.cloudinary.com/console/media_library" target="_blank">Otevrit Media Library</a>
   </div>
 
   <button class="reset-btn" onclick="resetAll()">Nova zakazka</button>
@@ -133,17 +135,39 @@ var API_SECRET = 'hR6mN58wkTCvQqFU-u2bXX3oN8c';
 
 var fotos = [];
 var uploadedCount = 0;
+var currentFolder = '';
 
-function formatDatum(){var d=new Date();return d.toLocaleDateString('cs-CZ',{day:'2-digit',month:'2-digit',year:'numeric'});}
-function formatCas(){var d=new Date();return d.toLocaleTimeString('cs-CZ',{hour:'2-digit',minute:'2-digit'});}
-function formatDatumSlozka(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function pad(n){return String(n).padStart(2,'0');}
+
+function getFolderName(firma){
+  var d = new Date();
+  var den = pad(d.getDate());
+  var mes = pad(d.getMonth()+1);
+  var rok = String(d.getFullYear()).slice(2);
+  var hod = pad(d.getHours());
+  var min = pad(d.getMinutes());
+  var firmaClean = firma.replace(/\s+/g,'-').replace(/[^a-zA-Z0-9\-_\u00C0-\u024F]/g,'');
+  return den+'-'+mes+'-'+rok+'_'+hod+'-'+min+'_'+firmaClean;
+}
+
+function formatDatum(){var d=new Date();return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+String(d.getFullYear()).slice(2);}
+function formatCas(){var d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());}
 
 document.getElementById('infoDatum').textContent=formatDatum();
 document.getElementById('infoCas').textContent=formatCas();
 
 function updateInfo(){
-  var firma=document.getElementById('firma').value.trim();
-  document.getElementById('infoFirma').textContent=firma||'—';
+  var firma = document.getElementById('firma').value.trim();
+  document.getElementById('infoFirma').textContent = firma||'—';
+  if(firma){
+    var folder = getFolderName(firma);
+    document.getElementById('folderPreview').style.display='block';
+    document.getElementById('folderPreview').textContent = folder;
+    document.getElementById('infoSlozka').textContent = folder;
+  } else {
+    document.getElementById('folderPreview').style.display='none';
+    document.getElementById('infoSlozka').textContent='—';
+  }
   checkReady();
 }
 
@@ -162,13 +186,13 @@ function addFotos(input){
 function renderGrid(){
   var grid=document.getElementById('fotoGrid');
   grid.innerHTML=fotos.map(function(f,i){
-    var iconHtml='';
-    if(f.status==='ok') iconHtml='<div class="status-icon ok">&#10003;</div>';
-    else if(f.status==='err') iconHtml='<div class="status-icon err">!</div>';
-    else iconHtml='<div class="status-icon wait">'+String(i+1)+'</div>';
-    var progressHtml=f.status==='uploading'?'<div class="progress"><div class="progress-bar" id="pb'+i+'" style="width:0%"></div></div>':'';
-    var delHtml=f.status==='wait'||f.status==='err'?'<button class="del-btn" onclick="deleteFoto('+i+')">x</button>':'';
-    return '<div class="foto-thumb">'+iconHtml+'<img src="'+f.data+'" loading="lazy">'+progressHtml+delHtml+'</div>';
+    var icon='';
+    if(f.status==='ok') icon='<div class="status-icon ok">&#10003;</div>';
+    else if(f.status==='err') icon='<div class="status-icon err">!</div>';
+    else if(f.status==='uploading') icon='<div class="status-icon uploading">...</div>';
+    else icon='<div class="status-icon wait">'+String(i+1)+'</div>';
+    var del=f.status==='wait'||f.status==='err'?'<button class="del-btn" onclick="deleteFoto('+i+')">x</button>':'';
+    return '<div class="foto-thumb">'+icon+'<img src="'+f.data+'" loading="lazy">'+del+'</div>';
   }).join('');
   var count=fotos.length;
   document.getElementById('fotoCount').style.display=count?'block':'none';
@@ -195,15 +219,14 @@ async function sha1(str){
 
 async function nahrat(){
   var firma=document.getElementById('firma').value.trim();
-  var datum=formatDatumSlozka();
-  var folder=firma.replace(/[^a-zA-Z0-9_\-\u00C0-\u024F]/g,'_')+'/'+datum;
+  currentFolder=getFolderName(firma);
   var pending=fotos.filter(function(f){return f.status==='wait'||f.status==='err';});
   if(!pending.length)return;
 
   document.getElementById('uploadBtn').disabled=true;
   document.getElementById('progressWrap').style.display='block';
   document.getElementById('progressBar').style.width='0%';
-  showStatus('Nahrivam '+pending.length+' fotek...','warn');
+  showStatus('Nahrivam '+pending.length+' '+(pending.length<5?'fotky':'fotek')+'...','warn');
 
   uploadedCount=0;
   var total=pending.length;
@@ -212,14 +235,13 @@ async function nahrat(){
   for(var i=0;i<fotos.length;i++){
     var f=fotos[i];
     if(f.status!=='wait'&&f.status!=='err') continue;
-
     f.status='uploading';
     renderGrid();
 
     try{
       var timestamp=Math.round(Date.now()/1000);
-      var publicId=folder+'/foto_'+String(i+1).padStart(2,'0');
-      var sigStr='folder='+folder+'&public_id='+publicId+'&timestamp='+timestamp+API_SECRET;
+      var publicId=currentFolder+'/foto_'+pad(i+1);
+      var sigStr='folder='+currentFolder+'&public_id='+publicId+'&timestamp='+timestamp+API_SECRET;
       var signature=await sha1(sigStr);
 
       var formData=new FormData();
@@ -227,7 +249,7 @@ async function nahrat(){
       formData.append('api_key',API_KEY);
       formData.append('timestamp',timestamp);
       formData.append('signature',signature);
-      formData.append('folder',folder);
+      formData.append('folder',currentFolder);
       formData.append('public_id',publicId);
 
       var resp=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD_NAME+'/image/upload',{method:'POST',body:formData});
@@ -251,16 +273,13 @@ async function nahrat(){
   }
 
   if(errors===0){
-    showStatus('Vsechny fotky nahrane! ('+uploadedCount+'/'+total+')','ok');
-    var folderUrl='https://console.cloudinary.com/console/media_library/folders/'+encodeURIComponent(firma.replace(/[^a-zA-Z0-9_\-\u00C0-\u024F]/g,'_'));
-    document.getElementById('folderLink').href=folderUrl;
+    showStatus('Hotovo! Nahrano '+uploadedCount+' '+(uploadedCount<5?'fotky':'fotek')+'.','ok');
     document.getElementById('linkBox').style.display='block';
   } else if(uploadedCount>0){
     showStatus('Nahrano '+uploadedCount+' z '+total+'. '+errors+' selhalo — zkus znovu.','warn');
   } else {
-    showStatus('Chyba nahravani. Zkontroluj pripojeni a zkus znovu.','err');
+    showStatus('Chyba nahravani. Zkontroluj pripojeni.','err');
   }
-
   checkReady();
 }
 
@@ -268,7 +287,7 @@ function otevritMail(){
   var firma=document.getElementById('firma').value.trim();
   var predmet=encodeURIComponent(firma);
   var urls=fotos.filter(function(f){return f.url;}).map(function(f){return f.url;}).join('\n');
-  var body=encodeURIComponent('Firma: '+firma+'\nDatum: '+formatDatum()+'\n\nFotky:\n'+urls);
+  var body=encodeURIComponent('Firma: '+firma+'\nDatum: '+formatDatum()+' '+formatCas()+'\n\nFotky:\n'+urls);
   window.location.href='mailto:?subject='+predmet+'&body='+body;
 }
 
@@ -285,14 +304,17 @@ function resetAll(){
   }
   fotos=[];
   uploadedCount=0;
+  currentFolder='';
   document.getElementById('firma').value='';
   document.getElementById('fotoGrid').innerHTML='';
   document.getElementById('fotoCount').style.display='none';
+  document.getElementById('folderPreview').style.display='none';
   document.getElementById('headerBadge').textContent='0 fotek';
   document.getElementById('infoFirma').textContent='—';
   document.getElementById('infoCount').textContent='0';
   document.getElementById('infoDatum').textContent=formatDatum();
   document.getElementById('infoCas').textContent=formatCas();
+  document.getElementById('infoSlozka').textContent='—';
   document.getElementById('uploadBtn').disabled=true;
   document.getElementById('mailBtn').disabled=true;
   document.getElementById('statusMsg').style.display='none';
